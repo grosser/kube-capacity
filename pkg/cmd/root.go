@@ -57,6 +57,7 @@ func init() {
 		"pod-labels", "l", "", "labels to filter pods with")
 	rootCmd.PersistentFlags().StringVarP(&opts.NodeLabels,
 		"node-labels", "", "", "labels to filter nodes with")
+	rootCmd.PersistentFlags().StringSliceVarP(&opts.PrintNodeLabels, "print-node-labels", "", nil, "node labels to print")
 	rootCmd.PersistentFlags().BoolVarP(&opts.ExcludeTainted,
 		"no-taint", "", false, "exclude nodes with taints")
 	rootCmd.PersistentFlags().StringVarP(&opts.NodeTaints,

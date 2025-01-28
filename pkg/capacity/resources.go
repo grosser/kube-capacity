@@ -66,6 +66,7 @@ type nodeMetric struct {
 	memory     *resourceMetric
 	podMetrics map[string]*podMetric
 	podCount   *podCount
+	nodeLabels map[string]string
 }
 
 type podMetric struct {
@@ -122,6 +123,7 @@ func buildClusterMetric(podList *corev1.PodList, pmList *v1beta1.PodMetricsList,
 				current:     tmpPodCount,
 				allocatable: node.Status.Allocatable.Pods().Value(),
 			},
+			nodeLabels: node.GetLabels(),
 		}
 	}
 

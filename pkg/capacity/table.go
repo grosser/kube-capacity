@@ -31,6 +31,7 @@ type tablePrinter struct {
 	sortBy          string
 	w               *tabwriter.Writer
 	availableFormat bool
+	nodeLabelKeys   []string
 }
 
 type tableLine struct {
@@ -45,6 +46,7 @@ type tableLine struct {
 	memoryLimits   string
 	memoryUtil     string
 	podCount       string
+	nodeLabels     []string
 }
 
 var headerStrings = tableLine{
@@ -64,6 +66,8 @@ var headerStrings = tableLine{
 func (tp *tablePrinter) Print() {
 	tp.w.Init(os.Stdout, 0, 8, 2, ' ', 0)
 	sortedNodeMetrics := tp.cm.getSortedNodeMetrics(tp.sortBy)
+
+	headerStrings.nodeLabels = append(headerStrings.nodeLabels, tp.nodeLabelKeys...)
 
 	tp.printLine(&headerStrings)
 
@@ -135,10 +139,19 @@ func (tp *tablePrinter) getLineItems(tl *tableLine) []string {
 		lineItems = append(lineItems, tl.podCount)
 	}
 
+	if len(tp.nodeLabelKeys) > 0 {
+		lineItems = append(lineItems, tl.nodeLabels...)
+	}
+
 	return lineItems
 }
 
 func (tp *tablePrinter) printClusterLine() {
+	labels := make([]string, 0, len(tp.nodeLabelKeys))
+	for i := 0; i < len(tp.nodeLabelKeys); i++ {
+		labels = append(labels, VoidValue)
+	}
+
 	tp.printLine(&tableLine{
 		node:           VoidValue,
 		namespace:      VoidValue,
@@ -151,10 +164,15 @@ func (tp *tablePrinter) printClusterLine() {
 		memoryLimits:   tp.cm.memory.limitString(tp.availableFormat),
 		memoryUtil:     tp.cm.memory.utilString(tp.availableFormat),
 		podCount:       tp.cm.podCount.podCountString(),
+		nodeLabels:     labels,
 	})
 }
 
 func (tp *tablePrinter) printNodeLine(nodeName string, nm *nodeMetric) {
+	labels := make([]string, 0, len(tp.nodeLabelKeys))
+	for _, key := range tp.nodeLabelKeys {
+		labels = append(labels, nm.nodeLabels[key])
+	}
 	tp.printLine(&tableLine{
 		node:           nodeName,
 		namespace:      VoidValue,
@@ -167,6 +185,7 @@ func (tp *tablePrinter) printNodeLine(nodeName string, nm *nodeMetric) {
 		memoryLimits:   nm.memory.limitString(tp.availableFormat),
 		memoryUtil:     nm.memory.utilString(tp.availableFormat),
 		podCount:       nm.podCount.podCountString(),
+		nodeLabels:     labels,
 	})
 }
 

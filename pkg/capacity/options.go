@@ -9,6 +9,7 @@ type Options struct {
 	ShowPodCount          bool
 	PodLabels             string
 	NodeLabels            string
+	PrintNodeLabels       []string
 	NodeTaints            string
 	ExcludeTainted        bool
 	NamespaceLabels       string
