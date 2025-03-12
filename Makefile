@@ -4,7 +4,7 @@ all: build lint test
 
 .PHONY: build
 build:
-	go build -v ./...
+	go build -o kubectl-resource_capacity main.go
 
 .PHONY: lint
 lint: golangci-lint
