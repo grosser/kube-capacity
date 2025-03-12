@@ -1,3 +1,12 @@
+Install this fork:
+
+```
+kubectl krew remove resource-capacity
+make build
+mv kubectl-resource_capacity /usr/local/bin/
+chmod +x /usr/local/bin/kubectl-resource_capacity
+```
+
 # kube-capacity
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/robscott/kube-capacity?v=1)](https://goreportcard.com/report/github.com/robscott/kube-capacity) [![CircleCI](https://circleci.com/gh/robscott/kube-capacity.svg?style=svg)](https://circleci.com/gh/robscott/kube-capacity)
